@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+<<<<<<< HEAD
 import { GeneratorInput, Quest } from '../types/generator.js';
 
 interface GeneratorState {
@@ -12,33 +13,57 @@ interface GeneratorState {
   error: string | null;
   
 
+=======
+import type { GeneratorInput, Quest } from '../types/generator.js';
+
+interface GeneratorState {
+  input: GeneratorInput;
+  generatedQuest: Quest | null;
+  isLoading: boolean;
+  error: string | null;
+  
+>>>>>>> 6b47bff (Второй коммит))))
   setInput: (input: Partial<GeneratorInput>) => void;
   resetInput: () => void;
   generateQuest: () => Promise<void>;
   resetQuest: () => void;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6b47bff (Второй коммит))))
 const defaultInput: GeneratorInput = {
   setting: 'fantasy',
   startingPoint: '',
   questStyle: 'adventure',
   customSetting: '',
   customQuestStyle: '',
+<<<<<<< HEAD
 };
 
 
+=======
+  fileContent: '',
+  inputMethod: 'form',
+};
+
+>>>>>>> 6b47bff (Второй коммит))))
 export const useGeneratorStore = create<GeneratorState>((set, get) => ({
   input: { ...defaultInput },
   generatedQuest: null,
   isLoading: false,
   error: null,
   
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6b47bff (Второй коммит))))
   setInput: (input) => set((state) => ({
     input: { ...state.input, ...input },
   })),
   
+<<<<<<< HEAD
 
   resetInput: () => set({ input: { ...defaultInput } }),
   
@@ -51,10 +76,29 @@ export const useGeneratorStore = create<GeneratorState>((set, get) => ({
       set({ error: 'Необходимо указать отправную точку' });
       return;
     }
+=======
+  resetInput: () => set({ input: { ...defaultInput } }),
+  
+  generateQuest: async () => {
+    const { input } = get();
+    
+    console.log('generateQuest called with input:', input);
+
+    if (input.inputMethod === 'form' && !input.startingPoint) {
+      set({ error: 'Необходимо указать отправную точку' });
+      return;
+    }
+
+    if (input.inputMethod === 'file' && !input.fileContent) {
+      set({ error: 'Необходимо загрузить файл' });
+      return;
+    }
+>>>>>>> 6b47bff (Второй коммит))))
     
     set({ isLoading: true, error: null });
     
     try {
+<<<<<<< HEAD
   
   
       await new Promise(resolve => setTimeout(resolve, 2000));
@@ -370,5 +414,96 @@ export const useGeneratorStore = create<GeneratorState>((set, get) => ({
   },
   
 
+=======
+      // Подготавливаем данные для отправки на API
+      const requestData = {
+        setting: input.setting,
+        starting_point: input.startingPoint,
+        quest_style: input.questStyle,
+        custom_setting: input.customSetting,
+        custom_quest_style: input.customQuestStyle,
+        file_content: input.fileContent,
+        input_method: input.inputMethod
+      };
+
+      console.log('Отправляем запрос на API:', requestData);
+
+      // Отправляем запрос на бэкенд
+      const response = await fetch('/api/generate-quest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Ошибка при генерации квеста');
+      }
+
+      const questData = await response.json();
+      console.log('Получен ответ от API:', questData);
+
+      // Преобразуем данные в формат фронтенда
+      const quest: Quest = {
+        id: questData.id,
+        title: questData.title,
+        description: questData.description,
+        setting: questData.setting,
+        questStyle: questData.quest_style,
+        startingPoint: questData.starting_point,
+        scenes: questData.scenes.map((scene: any) => ({
+          id: scene.id,
+          title: scene.title,
+          description: scene.description,
+          locationId: scene.location_id,
+          characters: scene.characters,
+          items: scene.items,
+          choices: scene.choices.map((choice: any) => ({
+            id: choice.id,
+            text: choice.text,
+            nextSceneId: choice.next_scene_id,
+            requiredItems: choice.required_items,
+            consequence: choice.consequence,
+          })),
+          isEnding: scene.is_ending,
+        })),
+        characters: questData.characters.map((char: any) => ({
+          id: char.id,
+          name: char.name,
+          role: char.role,
+          description: char.description,
+          motivation: char.motivation,
+          isEnemy: char.is_enemy,
+          isAlly: char.is_ally,
+        })),
+        locations: questData.locations.map((loc: any) => ({
+          id: loc.id,
+          name: loc.name,
+          description: loc.description,
+          characters: loc.characters,
+          items: loc.items,
+        })),
+        items: questData.items.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          isKey: item.is_key,
+          effect: item.effect,
+        })),
+      };
+      
+      set({ generatedQuest: quest, isLoading: false });
+    } catch (error) {
+      console.error('Error generating quest:', error);
+      set({ 
+        error: error instanceof Error ? error.message : 'Произошла ошибка при генерации квеста', 
+        isLoading: false 
+      });
+    }
+  },
+  
+>>>>>>> 6b47bff (Второй коммит))))
   resetQuest: () => set({ generatedQuest: null }),
 }));

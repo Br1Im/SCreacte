@@ -7,6 +7,11 @@ export interface GeneratorInput {
   questStyle: QuestStyle;
   customSetting?: string;
   customQuestStyle?: string;
+<<<<<<< HEAD
+=======
+  fileContent?: string; // Добавляем поддержку содержимого файла
+  inputMethod: 'form' | 'file'; // Добавляем метод ввода
+>>>>>>> 6b47bff (Второй коммит))))
 }
 
 

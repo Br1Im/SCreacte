@@ -15,10 +15,23 @@ import {
   Flex,
   Icon,
   Divider,
+<<<<<<< HEAD
 } from '@chakra-ui/react';
 import { useGeneratorStore } from '../store/generatorStore';
 import { Setting, QuestStyle } from '../types/generator.js';
 import { FaGamepad, FaMapMarkedAlt, FaBookOpen } from 'react-icons/fa';
+=======
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from '@chakra-ui/react';
+import { useGeneratorStore } from '../store/generatorStore';
+import type { Setting, QuestStyle } from '../types/generator.js';
+import { FaGamepad, FaMapMarker, FaBook, FaUpload, FaEdit } from 'react-icons/fa';
+import FileUpload from './FileUpload';
+>>>>>>> 6b47bff (Второй коммит))))
 
 const GeneratorForm = () => {
   const { input, setInput, generateQuest, isLoading, error } = useGeneratorStore();
@@ -44,6 +57,23 @@ const GeneratorForm = () => {
     e.preventDefault();
     generateQuest();
   };
+<<<<<<< HEAD
+=======
+
+  const handleFileContent = (content: string) => {
+    setInput({ 
+      fileContent: content,
+      inputMethod: 'file' as const
+    });
+  };
+
+  const handleClearFile = () => {
+    setInput({ 
+      fileContent: '',
+      inputMethod: 'form' as const
+    });
+  };
+>>>>>>> 6b47bff (Второй коммит))))
   
   return (
     <Box
@@ -70,6 +100,25 @@ const GeneratorForm = () => {
         </Text>
         
         <Divider />
+<<<<<<< HEAD
+=======
+
+        <Tabs variant="enclosed" colorScheme="brand">
+          <TabList>
+            <Tab>
+              <Icon as={FaEdit} mr={2} />
+              Заполнить форму
+            </Tab>
+            <Tab>
+              <Icon as={FaUpload} mr={2} />
+              Загрузить файл
+            </Tab>
+          </TabList>
+          
+          <TabPanels>
+            <TabPanel>
+              <VStack spacing={6} align="stretch">
+>>>>>>> 6b47bff (Второй коммит))))
         
         <Flex direction={{ base: 'column', md: 'row' }} gap={6}>
           <FormControl isRequired>
@@ -107,10 +156,17 @@ const GeneratorForm = () => {
         </Flex>
         
         <FormControl isRequired>
+<<<<<<< HEAD
           <Flex align="center" mb={2}>
             <Icon as={FaMapMarkedAlt} mr={2} color="brand.500" />
             <FormLabel mb={0}>Отправная точка</FormLabel>
           </Flex>
+=======
+                      <Flex align="center" mb={2}>
+              <Icon as={FaMapMarker} mr={2} color="brand.500" />
+              <FormLabel mb={0}>Отправная точка</FormLabel>
+            </Flex>
+>>>>>>> 6b47bff (Второй коммит))))
           <Input
             value={input.startingPoint}
             onChange={(e) => setInput({ startingPoint: e.target.value })}
@@ -123,7 +179,11 @@ const GeneratorForm = () => {
         <Flex direction={{ base: 'column', md: 'row' }} gap={6}>
           <FormControl isRequired>
             <Flex align="center" mb={2}>
+<<<<<<< HEAD
               <Icon as={FaBookOpen} mr={2} color="brand.500" />
+=======
+              <Icon as={FaBook} mr={2} color="brand.500" />
+>>>>>>> 6b47bff (Второй коммит))))
               <FormLabel mb={0}>Стиль квеста</FormLabel>
             </Flex>
             <Select
@@ -171,6 +231,45 @@ const GeneratorForm = () => {
             {error}
           </Text>
         )}
+<<<<<<< HEAD
+=======
+              </VStack>
+            </TabPanel>
+            
+            <TabPanel>
+              <VStack spacing={6} align="stretch">
+                <Text textAlign="center" fontSize="md" color="gray.500">
+                  Загрузите текстовый файл с описанием вашего мира и квеста
+                </Text>
+                
+                <FileUpload
+                  onFileContent={handleFileContent}
+                  onClear={handleClearFile}
+                  fileContent={input.fileContent}
+                />
+                
+                <Button
+                  colorScheme="brand"
+                  size="lg"
+                  isLoading={isLoading}
+                  loadingText="Генерация..."
+                  mt={4}
+                  isDisabled={!input.fileContent}
+                  onClick={generateQuest}
+                >
+                  Сгенерировать квест из файла
+                </Button>
+                
+                {error && (
+                  <Text color="red.500" mt={2}>
+                    {error}
+                  </Text>
+                )}
+              </VStack>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+>>>>>>> 6b47bff (Второй коммит))))
       </VStack>
     </Box>
   );

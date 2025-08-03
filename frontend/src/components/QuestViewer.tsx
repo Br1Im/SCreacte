@@ -21,10 +21,18 @@ import {
   List,
   ListItem,
   ListIcon,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useGeneratorStore } from '../store/generatorStore';
 import { Scene, Character, Location, Item } from '../types/generator.js';
 import { FaMapMarkerAlt, FaUser, FaBook, FaArrowRight, FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
+import QuestGraph from './QuestGraph';
 
 const QuestViewer = () => {
   const { generatedQuest, resetQuest } = useGeneratorStore();
@@ -33,6 +41,8 @@ const QuestViewer = () => {
   const bgColor = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const accentColor = useColorModeValue('brand.500', 'brand.300');
+  
+  const { isOpen, onOpen, onClose } = useDisclosure();
   
   if (!generatedQuest) return null;
   
@@ -275,6 +285,14 @@ const QuestViewer = () => {
             top={{ lg: '20px' }}
           >
             <Heading size="md" mb={4}>Навигация по сценам</Heading>
+            <Button
+              colorScheme="teal"
+              mb={4}
+              onClick={onOpen}
+              width="100%"
+            >
+              Развернуть ветки квеста
+            </Button>
             <VStack spacing={2} align="stretch">
               {generatedQuest.scenes.map(scene => (
                 <Button
@@ -294,6 +312,16 @@ const QuestViewer = () => {
           </Box>
         </GridItem>
       </Grid>
+      <Modal isOpen={isOpen} onClose={onClose} size="6xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Граф квеста</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <QuestGraph />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
